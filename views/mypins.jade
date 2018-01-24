@@ -1,0 +1,46 @@
+include mypins.html
+body
+script.
+  function imgerror(image){
+    image.onerror = "";
+    image.src = "https://cdn.dribbble.com/users/366584/screenshots/2527274/404_1.gif";
+    return true;
+  }
+  
+  var pins = !{pins}
+  pins.forEach(function(pin){
+    var id = pin["_id"]
+      var form = document.createElement("form")
+      form.setAttribute("action", "/mypins")
+      form.setAttribute("method", "post")
+      
+    var div = document.createElement("div")
+    div.setAttribute("style", "float:left;display:inline;min-width:30%; border: medium dashed gray; margin: 5px;padding: 10px; color: white");
+    var image = document.createElement("img")
+    var title = document.createElement("div")
+    title.innerHTML = pin["title"]
+    title.setAttribute("style", "color:white")
+    div.append(title)
+    image.setAttribute("src", pin["url"])
+    image.setAttribute("onerror", "imgerror(this)")
+    image.setAttribute("style",  "height: 150px")
+    console.log(pin["url"])
+    
+    //if (image.complete){
+      div.append(image)
+    //}
+    var hidden = document.createElement("input")
+    hidden.setAttribute("type", "hidden")
+    hidden.setAttribute("name", "id")
+    hidden.setAttribute("value", pin["_id"])
+
+    var remove = document.createElement("input")
+    remove.setAttribute("type", "Submit")
+    remove.setAttribute("value", "unpin")
+    remove.setAttribute("class", "button special small")
+    
+    form.append(hidden)
+    form.append(remove)
+    div.append(form)
+    document.querySelector("#pins").append(div)
+  })

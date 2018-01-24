@@ -1,0 +1,110 @@
+add<!DOCTYPE html>
+<!--
+	Transit by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>ew Poll</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/skel.min.js"></script>
+		<script src="/js/skel-layers.min.js"></script>
+		<script src="/js/init.js"></script>
+			<link rel="stylesheet" href="/css/skel.css" />
+			<link rel="stylesheet" href="/css/style.css" />
+			<link rel="stylesheet" href="/css/style-xlarge.css" />
+	</head>
+	<body class="landing">
+
+		<!-- Header -->
+			<header id="header">
+				<h1><a href="index.html"></a></h1>
+				<nav id="nav">
+					<ul id="asd">
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Three -->
+			<section id="three" class="wrapper style3 special">
+				<div class="container">
+					<header class="major">
+						<h2>add pin</h2>
+					</header>
+				</div>
+				<div class="container 50%">
+					<form action="/addpin" method="post">
+						<div class="row uniform">
+							<div class="6u 12u$(small)">
+								<input name="url" value="" placeholder="url" type="text">
+							</div>
+              <div class="6u 12u$(small)">
+								<input name="title" value="" placeholder="title" type="text">
+							</div>
+							<div class="12u$">
+								<ul class="actions">
+                  <li><input type="Submit" class="button special" value="submit"></li>
+								</ul>
+							</div>
+						</div>
+					</form>
+				</div>
+			</section>
+
+	</body>
+</html>
+<script>
+  if(JSON.parse(document.cookie).user){
+    document.querySelector("#signIn").innerHTML = "Sign Out"
+    document.querySelector("#signIn").setAttribute("href", "/signout")
+    
+    
+    var allpins = document.createElement("a");
+    allpins.setAttribute("class", "button special");
+    allpins.innerHTML = "all pins";
+    allpins.setAttribute("href", "/allpins");
+    
+    var mypins = document.createElement("a");
+    mypins.setAttribute("class", "button special");
+    mypins.innerHTML = "mypins";
+    mypins.setAttribute("href", "/mypins");
+    
+    var addpin = document.createElement("a");
+    addpin.setAttribute("class", "button special");
+    addpin.innerHTML = "add pin";
+    addpin.setAttribute("href", "/addpin");
+    
+    var li = document.createElement("li");
+    var lili = document.createElement("li");
+    var lilili = document.createElement("li");
+    
+    
+    lilili.append(allpins);
+    document.querySelector("#asd").append(lilili);
+    
+    lili.append(mypins);
+    document.querySelector("#asd").append(lili);
+    
+    li.append(addpin);
+    document.querySelector("#asd").append(li);
+  }else {
+    
+    var signup = document.createElement("a");
+    signup.setAttribute("id", "signup");
+    signup.setAttribute("class", "button special");
+    signup.innerHTML = "Sign Up";
+    signup.setAttribute("href", "/signup");
+    
+    var li = document.createElement("li");
+    li.append(signup);
+    document.querySelector("#asd").append(li);
+    
+  }
+
+</script>

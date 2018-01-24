@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--
+	Transit by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+    <title>all pins</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/skel.min.js"></script>
+		<script src="/js/skel-layers.min.js"></script>
+		<script src="/js/init.js"></script>
+			<link rel="stylesheet" href="/css/skel.css" />
+			<link rel="stylesheet" href="/css/style.css" />
+			<link rel="stylesheet" href="/css/style-xlarge.css" />
+		
+	</head>
+	<body class="landing">
+
+		<!-- Header -->
+			<header id="header">
+				<h1><a href="index.html"></a></h1>
+				<nav id="nav">
+					<ul id="asd">
+						<li><a href="/signin" class="button special" id="signIn">Sign In</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- One -->
+			<section id="one" class="wrapper style3 special">
+				<div class="container 50%">
+					<header class="major">
+						<h2 id="qwe">all pins</h2>
+					</header>
+				</div>
+            <div id="pins" style="margin:0px 150px"></div>
+			</section>
+    <div id="results" class="container 90%"></div>
+	</body>
+</html>
+
+
+<script>
+  if(JSON.parse(document.cookie).user){
+    document.querySelector("#signIn").innerHTML = "Sign Out"
+    document.querySelector("#signIn").setAttribute("href", "/signout")
+    
+    
+    var allpins = document.createElement("a");
+    allpins.setAttribute("class", "button special");
+    allpins.innerHTML = "all pins";
+    allpins.setAttribute("href", "/allpins");
+    
+    var mypins = document.createElement("a");
+    mypins.setAttribute("class", "button special");
+    mypins.innerHTML = "mypins";
+    mypins.setAttribute("href", "/mypins");
+    
+    var addpin = document.createElement("a");
+    addpin.setAttribute("class", "button special");
+    addpin.innerHTML = "add pin";
+    addpin.setAttribute("href", "/addpin");
+    
+    var li = document.createElement("li");
+    var lili = document.createElement("li");
+    var lilili = document.createElement("li");
+    
+    
+    lilili.append(allpins);
+    document.querySelector("#asd").append(lilili);
+    
+    lili.append(mypins);
+    document.querySelector("#asd").append(lili);
+    
+    li.append(addpin);
+    document.querySelector("#asd").append(li);
+  }else {
+    
+    var signup = document.createElement("a");
+    signup.setAttribute("class", "button special");
+    signup.innerHTML = "Sign up";
+    signup.setAttribute("href", "/signup");
+    
+    var li = document.createElement("li");
+    li.append(signup);
+    document.querySelector("#asd").append(li);
+    
+  }
+
+</script>

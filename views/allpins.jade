@@ -1,0 +1,50 @@
+include allpins.html
+body
+script.
+  function imgerror(image){
+    image.onerror = "";
+    image.src = "http://www.ahdath24.com/templates/defaultAhdath/images/404.png";
+    return true;
+  }
+  
+  var pins = !{pins}
+  pins.forEach(function(pin){
+    var id = pin["_id"]
+      var form = document.createElement("form")
+      form.setAttribute("action", "/allpins")
+      form.setAttribute("method", "post")
+      
+    var div = document.createElement("div")
+    div.setAttribute("style", "float:left;display:inline;min-width:30%; border: medium dashed gray; margin: 5px;padding: 10px; color: white");
+    var image = document.createElement("img")
+    var title = document.createElement("div")
+    var user = document.createElement("div")
+    title.innerHTML = pin["title"]
+    user.innerHTML = "by " + pin["user"]
+    title.setAttribute("style", "color:white")
+    div.append(title)
+    image.setAttribute("src", pin["url"])
+    image.setAttribute("onerror", "imgerror(this)")
+    image.setAttribute("style",  "height: 150px")
+    console.log(pin["url"])
+    
+    //if (image.complete){
+      div.append(image)
+      div.append(user)
+    //}
+    var hidden = document.createElement("input")
+    hidden.setAttribute("type", "hidden")
+    hidden.setAttribute("name", "id")
+    hidden.setAttribute("value", pin["_id"])
+    
+    
+    var upvote = document.createElement("input")
+    upvote.setAttribute("type", "Submit")
+    upvote.setAttribute("value", "upvote (" + pin["upvotes"] +")")
+    upvote.setAttribute("class", "button special small")
+    
+    form.append(hidden)
+    form.append(upvote)
+    div.append(form)
+    document.querySelector("#pins").append(div)
+  })
