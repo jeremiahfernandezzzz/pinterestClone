@@ -79,9 +79,11 @@ app.get("/", function(request,response){
 })
 
 app.get("/addpin", function (request, response) {
-  if(request.user.twitterId){
+  if(request.user){
+    //console.log(1)
     response.sendFile((__dirname + '/views/addpin.html'))
   } else {
+    //console.log(2)
     response.redirect("/")
   }
 });
@@ -165,11 +167,11 @@ app.get("/allpins", function(request,response){
                   user: element.user
                 }
                 pinswithupvotes.push(pin)
-                if (pinswithupvotes.length == pins.length) {
-                  console.log(pinswithupvotes)
+                //if (pinswithupvotes.length == pins.length) {
+                  console.log("pinswithupvotes " + pinswithupvotes)
                   //response.setHeader('Set-Cookie',JSON.stringify(request.session))
                   response.render('allpins', { pins : JSON.stringify(pinswithupvotes) });
-                }
+                //}
             })
           })
               /*
