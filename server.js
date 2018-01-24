@@ -113,8 +113,8 @@ app.get("/mypins", function(request,response){
     //var added_books = [];
     MongoClient.connect(url, function(err, db){
       if (db){
-          db.collection("pinbored_pins").find({user: request.user.twitterId}).toArray().then(pins => {
-                console.log(pins)
+          db.collection("pinbored_pins").find({user: request.user.twitterId.toString()}).toArray().then(pins => {
+                console.log("123"  + pins)
                 //response.setHeader('Set-Cookie',JSON.stringify(request.session))
                 response.render('mypins', { pins : JSON.stringify(pins) });
           })
