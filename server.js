@@ -276,6 +276,14 @@ app.post("/signup", function (request, response) {
   })
 });
 
+app.get("/signout", function (request, response) {
+  response.send('asd');
+})
+
+app.get("/asd", function(request, response){
+  response.send('asd');
+})
+
 app.get("/:user", function (request, response) {
   MongoClient.connect(url, function(err, db){
     if (db){
@@ -318,7 +326,6 @@ app.get("/:user", function (request, response) {
   })
   
 })
-
 
 app.get("/asd", function (request, response) {
   response.send("asd")
