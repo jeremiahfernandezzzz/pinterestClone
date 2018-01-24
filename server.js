@@ -13,8 +13,24 @@ var cookies = require('cookie-session');
 var passport = require('passport')
   , TwitterStrategy = require('passport-twitter').Strategy;
 var session = require('express-session');
+var mongoose = require('mongoose');
+var path = require('path');
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
+
+mongoose.connect(url);
+
+var findOrCreate = require('mongoose-findorcreate')
+var Schema = mongoose.Schema;
+var UserSchema = new Schema({ twitterId: Number});
+UserSchema.plugin(findOrCreate);
+var User = mongoose.model('User', UserSchema);
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("we're connected!")
+});
 
 // Authentication configuration
 app.use(session({
