@@ -17,7 +17,10 @@
     "google-books-search": "^0.3.1",
     "googleapis": "^24.0.0",
     "jade": "^1.11.0",
-    "mongodb": "^2.2.33"
+    "mongodb": "^2.2.33",
+    "passport": "^0.4.0",
+    "passport-twitter": "^1.0.4",
+    "session": "^0.1.0"
   },
   "engines": {
     "node": "8.x"

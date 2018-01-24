@@ -10,9 +10,41 @@ var MongoClient = mongodb.MongoClient;
 var url = process.env.DB_URL;
 var bodyParser = require('body-parser');
 var cookies = require('cookie-session');
+var passport = require('passport')
+  , TwitterStrategy = require('passport-twitter').Strategy;
+var session = require('express-session');
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
+// Authentication configuration
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: 'bla bla bla' 
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new TwitterStrategy({
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    callbackURL: "http://cultured-numeric.glitch.me/auth/twitter/callback"
+},
+  function(token, tokenSecret, profile, cb) {
+    User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+      console.log('A new uxer from "%s" was inserted', user.twitterId);
+      return cb(err, user);
+    });
+  }));
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', { successRedirect: '/',
+                                     failureRedirect: '/login'}));
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('views'));
 
@@ -291,35 +323,39 @@ app.get("/:user", function (request, response) {
   MongoClient.connect(url, function(err, db){
     if (db){
         db.collection("pinbored_pins").find({user: request.params.user}).toArray().then(pins => {
-          console.log("asdasdasdasd"  + pins.length)
-          
-          var pinswithupvotes = []
-          pins.forEach(function(element){
-            db.collection("pinbored_upvotes").find({}).toArray().then(upvote => {
-                var pin = {}
-                
-                var upvotes = 0
-              upvote.forEach(function(match){
-                if(match.pin_id == element._id){
-                  upvotes += 1
-                }
+          if(pins.length > 0){
+            console.log("asdasdasdasd"  + pins.length)
+
+            var pinswithupvotes = []
+            pins.forEach(function(element){
+              db.collection("pinbored_upvotes").find({}).toArray().then(upvote => {
+                  var pin = {}
+
+                  var upvotes = 0
+                upvote.forEach(function(match){
+                  if(match.pin_id == element._id){
+                    upvotes += 1
+                  }
+                })
+
+                  pin = {
+                    _id: element._id,
+                    upvotes: upvotes,
+                    url: element.url,
+                    title: element.title,
+                    user: element.user
+                  }
+                  pinswithupvotes.push(pin)
+                  if (pinswithupvotes.length == pins.length) {
+                    console.log(pinswithupvotes)
+                    response.setHeader('Set-Cookie',JSON.stringify(request.session))
+                    response.render('userpins', { pins : JSON.stringify(pinswithupvotes) });
+                  }
               })
-                
-                pin = {
-                  _id: element._id,
-                  upvotes: upvotes,
-                  url: element.url,
-                  title: element.title,
-                  user: element.user
-                }
-                pinswithupvotes.push(pin)
-                if (pinswithupvotes.length == pins.length) {
-                  console.log(pinswithupvotes)
-                  response.setHeader('Set-Cookie',JSON.stringify(request.session))
-                  response.render('userpins', { pins : JSON.stringify(pinswithupvotes) });
-                }
             })
-          })
+          } else {
+            response.send("user not found")
+          }
         })
       }
     
