@@ -80,10 +80,10 @@ app.get("/", function(request,response){
 
 app.get("/addpin", function (request, response) {
   if(request.user){
-    //console.log(1)
+    console.log(1)
     response.sendFile((__dirname + '/views/addpin.html'))
   } else {
-    //console.log(2)
+    console.log(2)
     response.redirect("/")
   }
 });
@@ -141,15 +141,18 @@ app.post("/mypins", function(request,response){
 
 app.get("/allpins", function(request,response){
   console.log("ayy" + JSON.stringify(request.session))
+                  response.render('allpins');
   //var added_books = [];
   MongoClient.connect(url, function(err, db){
     if (db){
         db.collection("pinbored_pins").find({}).toArray().then(pins => {
+            console.log("pin  "  + pins.length)
           console.log("asdasdasdasd"  + pins.length)
           
           var pinswithupvotes = []
           pins.forEach(function(element){
             db.collection("pinbored_upvotes").find({}).toArray().then(upvote => {
+              
                 var pin = {}
                 
                 var upvotes = 0
@@ -167,44 +170,13 @@ app.get("/allpins", function(request,response){
                   user: element.user
                 }
                 pinswithupvotes.push(pin)
-                //if (pinswithupvotes.length == pins.length) {
+                if (pinswithupvotes.length == pins.length) {
                   console.log("pinswithupvotes " + pinswithupvotes)
                   //response.setHeader('Set-Cookie',JSON.stringify(request.session))
                   response.render('allpins', { pins : JSON.stringify(pinswithupvotes) });
-                //}
+                }
             })
           })
-              /*
-              var pinswithupvotes = []
-              pins.forEach(function(element){
-                //console.log(element._id)
-                var pin = {}
-                var upvotes = 0
-                db.collection("pinbored_upvotes").find({}).toArray().then(upvote => {
-                  upvote.forEach(function(match){
-                    if(match.pin_id == element._id){
-                      upvotes += 1
-                    }
-                  })
-                  console.log(element._id + " " + upvotes)
-                  //upvote.forEach(function(match){
-                    //console.log("qweqwe" + JSON.stringify(match.pin_id))
-                  //})
-                  //upvotes += 1
-                  pin = {
-                    _id: element._id,
-                    upvotes: upvotes,
-                    url: element.url,
-                    title: element.title,
-                    user: element.user
-                  }
-                  pinswithupvotes.push(pin)
-                })
-              })
-              */
-              //response.render('allpins', { pins : JSON.stringify(pinswithupvotes) });
-              //response.setHeader('Set-Cookie',JSON.stringify(request.session))
-          
         })
       }
     
