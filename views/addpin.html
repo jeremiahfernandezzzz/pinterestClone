@@ -61,7 +61,7 @@ add<!DOCTYPE html>
 	</body>
 </html>
 <script>
-  if(JSON.parse(document.cookie).user){
+  if(JSON.parse(document.cookie).passport.user){
     document.querySelector("#signIn").innerHTML = "Sign Out"
     document.querySelector("#signIn").setAttribute("href", "/signout")
     
