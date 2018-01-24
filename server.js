@@ -49,7 +49,8 @@ passport.use(new TwitterStrategy({
 },
   function(token, tokenSecret, profile, cb) {
     User.findOrCreate({ twitterId: profile.id }, function (err, user) {
-      console.log('A new uxer from "%s" was inserted', user.twitterId);
+      
+      console.log('A new uxer from "%s" was inserted', user);
       return cb(err, user);
     });
   }));
@@ -91,7 +92,7 @@ app.get("/addpin", function (request, response) {
 app.post("/addpin", function (request, response) {
   console.log(request.body)
   var pin = {
-    user: request.user.twitterId,
+    user: toPrimitive(request.user.twitterId),
     url: request.body.url,
     title: request.body.title
   }
@@ -316,6 +317,10 @@ app.get("/:user", function (request, response) {
   MongoClient.connect(url, function(err, db){
     if (db){
         db.collection("pinbored_pins").find({user: request.params.user}).toArray().then(pins => {
+          console.log("hahaha " + pins)
+          response.render('userpins', { pins : JSON.stringify(pins) });
+          /*
+          
           if(pins.length > 0){
             console.log("asdasdasdasd"  + pins.length)
 
@@ -349,6 +354,7 @@ app.get("/:user", function (request, response) {
           } else {
             response.send("user not found")
           }
+          */
         })
       }
     
