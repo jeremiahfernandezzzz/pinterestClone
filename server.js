@@ -108,21 +108,25 @@ app.post("/addpin", function (request, response) {
 });
 
 app.get("/mypins", function(request,response){
-  console.log("ayy" + JSON.stringify(request.session))
-  //var added_books = [];
-  MongoClient.connect(url, function(err, db){
-    if (db){
-        db.collection("pinbored_pins").find({user: request.user.twitterId}).toArray().then(pins => {
-              console.log(pins)
-              //response.setHeader('Set-Cookie',JSON.stringify(request.session))
-              response.render('mypins', { pins : JSON.stringify(pins) });
-        })
+   if (request.user){ 
+    console.log("ayy" + JSON.stringify(request.session))
+    //var added_books = [];
+    MongoClient.connect(url, function(err, db){
+      if (db){
+          db.collection("pinbored_pins").find({user: request.user.twitterId}).toArray().then(pins => {
+                console.log(pins)
+                //response.setHeader('Set-Cookie',JSON.stringify(request.session))
+                response.render('mypins', { pins : JSON.stringify(pins) });
+          })
+        }
+
+      if (err) {
+       console.log("did not connect to " + url)
       }
-    
-    if (err) {
-     console.log("did not connect to " + url)
-    }
-  })
+    })
+  } else {
+    response.redirect("/")
+  }
 })
 
 app.post("/mypins", function(request,response){
@@ -140,6 +144,7 @@ app.post("/mypins", function(request,response){
 })
 
 app.get("/allpins", function(request,response){
+    response.setHeader('Set-Cookie',JSON.stringify(request.session))
   console.log("ayy" + JSON.stringify(request.session))
                   //response.render('allpins');
   //var added_books = [];
@@ -225,7 +230,6 @@ app.get("/signin", function (request, response) {
   //if(request.user.twitterId){
   //  response.redirect("/")
   //}else{
-    //response.setHeader('Set-Cookie',JSON.stringify(request.session))
     //response.sendFile((__dirname + '/views/signin.html'))//, {headers: {'Set-Cookie': JSON.stringify(request.session)}});
     response.redirect("/auth/twitter")
   //}
