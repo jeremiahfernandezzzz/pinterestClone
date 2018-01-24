@@ -18,9 +18,11 @@ script.
     div.setAttribute("style", "float:left;display:inline;min-width:30%; border: medium dashed gray; margin: 5px;padding: 10px; color: white");
     var image = document.createElement("img")
     var title = document.createElement("div")
-    var user = document.createElement("div")
+    var user = document.createElement("a")
     title.innerHTML = pin["title"]
     user.innerHTML = "by " + pin["user"]
+    user.setAttribute("href", "/" + pin["user"])
+    user.setAttribute("style", "color:white; display:block")
     title.setAttribute("style", "color:white")
     div.append(title)
     image.setAttribute("src", pin["url"])

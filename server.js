@@ -277,7 +277,10 @@ app.post("/signup", function (request, response) {
 });
 
 app.get("/signout", function (request, response) {
-  response.send('asd');
+  request.session = null
+  console.log(request.session)
+  response.setHeader('Set-Cookie',JSON.stringify(request.session))
+  response.redirect("/")
 })
 
 app.get("/asd", function(request, response){
