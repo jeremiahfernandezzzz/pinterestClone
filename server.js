@@ -141,42 +141,46 @@ app.post("/mypins", function(request,response){
 
 app.get("/allpins", function(request,response){
   console.log("ayy" + JSON.stringify(request.session))
-                  response.render('allpins');
+                  //response.render('allpins');
   //var added_books = [];
   MongoClient.connect(url, function(err, db){
     if (db){
-        db.collection("pinbored_pins").find({}).toArray().then(pins => {
-            console.log("pin  "  + pins.length)
-          console.log("asdasdasdasd"  + pins.length)
-          
-          var pinswithupvotes = []
-          pins.forEach(function(element){
-            db.collection("pinbored_upvotes").find({}).toArray().then(upvote => {
-              
-                var pin = {}
-                
-                var upvotes = 0
-              upvote.forEach(function(match){
-                if(match.pin_id == element._id){
-                  upvotes += 1
-                }
+      db.collection("pinbored_pins").find({}).toArray().then(pins => {
+        if(pins.length > 0){
+              console.log("pin  "  + pins.length)
+            console.log("asdasdasdasd"  + pins.length)
+
+            var pinswithupvotes = []
+            pins.forEach(function(element){
+              db.collection("pinbored_upvotes").find({}).toArray().then(upvote => {
+
+                  var pin = {}
+
+                  var upvotes = 0
+                upvote.forEach(function(match){
+                  if(match.pin_id == element._id){
+                    upvotes += 1
+                  }
+                })
+
+                  pin = {
+                    _id: element._id,
+                    upvotes: upvotes,
+                    url: element.url,
+                    title: element.title,
+                    user: element.user
+                  }
+                  pinswithupvotes.push(pin)
+                  if (pinswithupvotes.length == pins.length) {
+                    console.log("pinswithupvotes " + pinswithupvotes)
+                    //response.setHeader('Set-Cookie',JSON.stringify(request.session))
+                    response.render('allpins', { pins : JSON.stringify(pinswithupvotes) });
+                  }
               })
-                
-                pin = {
-                  _id: element._id,
-                  upvotes: upvotes,
-                  url: element.url,
-                  title: element.title,
-                  user: element.user
-                }
-                pinswithupvotes.push(pin)
-                if (pinswithupvotes.length == pins.length) {
-                  console.log("pinswithupvotes " + pinswithupvotes)
-                  //response.setHeader('Set-Cookie',JSON.stringify(request.session))
-                  response.render('allpins', { pins : JSON.stringify(pinswithupvotes) });
-                }
             })
-          })
+          } else {
+            response.render('allpins')
+          }
         })
       }
     
@@ -244,7 +248,7 @@ app.post("/signin", function (request, response) {
                 user: request.body.username
               }
               request.session = user
-              response.setHeader('Set-Cookie',JSON.stringify(request.session))
+              //response.setHeader('Set-Cookie',JSON.stringify(request.session))
               //request.cookies = {user: request.body.username}
               //request.session.save(
                 console.log("zxc" + JSON.stringify(request.session))
@@ -296,6 +300,7 @@ app.post("/signup", function (request, response) {
 
 app.get("/signout", function (request, response) {
   request.logout();
+  response.setHeader('Set-Cookie',JSON.stringify(request.session))
   response.redirect('back');
 })
 
@@ -332,7 +337,7 @@ app.get("/:user", function (request, response) {
                   pinswithupvotes.push(pin)
                   if (pinswithupvotes.length == pins.length) {
                     console.log(pinswithupvotes)
-                    response.setHeader('Set-Cookie',JSON.stringify(request.session))
+                    //response.setHeader('Set-Cookie',JSON.stringify(request.session))
                     response.render('userpins', { pins : JSON.stringify(pinswithupvotes) });
                   }
               })
