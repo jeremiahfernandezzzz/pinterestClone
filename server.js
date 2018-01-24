@@ -33,17 +33,19 @@ db.once('open', function() {
 });
 
 // Authentication configuration
+
 app.use(session({
   resave: false,
   saveUninitialized: false,
   secret: 'bla bla bla' 
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "http://cultured-numeric.glitch.me/auth/twitter/callback"
+    callbackURL: "http://wry-purple.glitch.me/auth/twitter/callback"
 },
   function(token, tokenSecret, profile, cb) {
     User.findOrCreate({ twitterId: profile.id }, function (err, user) {
@@ -67,14 +69,6 @@ app.use(express.static('views'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(cookies({
-  name: 'session',
-
-  keys: ['key1', 'key2'],
-  // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}));
-
 // http://expresjs.com/en/starter/basic-routing.html
 
 app.set('view engine', 'jade');
@@ -84,7 +78,7 @@ app.get("/", function(request,response){
 })
 
 app.get("/addpin", function (request, response) {
-  if(request.session.user){
+  if(request.user.twitterId){
     response.sendFile((__dirname + '/views/addpin.html'))
   } else {
     response.redirect("/")
@@ -94,7 +88,7 @@ app.get("/addpin", function (request, response) {
 app.post("/addpin", function (request, response) {
   console.log(request.body)
   var pin = {
-    user: request.session.user,
+    user: request.user.twitterId,
     url: request.body.url,
     title: request.body.title
   }
@@ -115,7 +109,7 @@ app.get("/mypins", function(request,response){
   //var added_books = [];
   MongoClient.connect(url, function(err, db){
     if (db){
-        db.collection("pinbored_pins").find({user: request.session.user}).toArray().then(pins => {
+        db.collection("pinbored_pins").find({user: request.user.twitterId}).toArray().then(pins => {
               console.log(pins)
               //response.setHeader('Set-Cookie',JSON.stringify(request.session))
               response.render('mypins', { pins : JSON.stringify(pins) });
@@ -219,13 +213,13 @@ app.get("/allpins", function(request,response){
 
 app.post("/allpins", function(request,response){
     var upvote = {
-      user: request.session.user,
+      user: request.user.twitterId,
       pin_id: request.body.id
     }
     console.log(JSON.stringify(upvote))
     MongoClient.connect(url, function(err, db){
     if (db){
-        db.collection("pinbored_upvotes").find({user: request.session.user, pin_id: request.body.id}).toArray().then(vote => {
+        db.collection("pinbored_upvotes").find({user: request.user.twitterId, pin_id: request.body.id}).toArray().then(vote => {
           
           //console.log(JSON.stringify(vote) == [])
           //console.log("HAHAHA "  + vote[0])
@@ -249,12 +243,13 @@ app.post("/allpins", function(request,response){
 })
 
 app.get("/signin", function (request, response) {
-  if(request.session.user){
-    response.redirect("/")
-  }else{
+  //if(request.user.twitterId){
+  //  response.redirect("/")
+  //}else{
     //response.setHeader('Set-Cookie',JSON.stringify(request.session))
-    response.sendFile((__dirname + '/views/signin.html'))//, {headers: {'Set-Cookie': JSON.stringify(request.session)}});
-  }
+    //response.sendFile((__dirname + '/views/signin.html'))//, {headers: {'Set-Cookie': JSON.stringify(request.session)}});
+    response.redirect("/auth/twitter")
+  //}
 });
 
 app.post("/signin", function (request, response) {
@@ -293,7 +288,7 @@ app.post("/signin", function (request, response) {
 
 
 app.get("/signup", function (request, response) {
-  if(request.session.user){
+  if(request.user.twitterId){
     response.redirect("/")
   }else{
     response.sendFile(__dirname + '/views/signup.html');
@@ -325,10 +320,8 @@ app.post("/signup", function (request, response) {
 });
 
 app.get("/signout", function (request, response) {
-  request.session = null
-  console.log(request.session)
-  response.setHeader('Set-Cookie',JSON.stringify(request.session))
-  response.redirect("/")
+  request.logout();
+  response.redirect('back');
 })
 
 app.get("/asd", function(request, response){
