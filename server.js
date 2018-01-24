@@ -74,6 +74,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'jade');
 
 app.get("/", function(request,response){
+  
   response.redirect("/allpins")
 })
 
@@ -166,7 +167,7 @@ app.get("/allpins", function(request,response){
                 pinswithupvotes.push(pin)
                 if (pinswithupvotes.length == pins.length) {
                   console.log(pinswithupvotes)
-                  response.setHeader('Set-Cookie',JSON.stringify(request.session))
+                  //response.setHeader('Set-Cookie',JSON.stringify(request.session))
                   response.render('allpins', { pins : JSON.stringify(pinswithupvotes) });
                 }
             })
