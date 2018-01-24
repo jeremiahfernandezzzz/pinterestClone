@@ -13,7 +13,7 @@ script.
   pins.forEach(function(pin){
     var id = pin["_id"]
       var form = document.createElement("form")
-      form.setAttribute("action", "/allpins")
+      form.setAttribute("action", "/" + pins[0]["user"])
       form.setAttribute("method", "post")
       
     var div = document.createElement("div")
